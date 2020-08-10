@@ -29,26 +29,26 @@ msg2 = b"a message to verify"
 
 class PicnicBase:
     def test_keygen(self):
-        pk, sk = picnic.keygen(self.param)
+        sk, pk = picnic.keygen(self.param)
         self.assertIsNotNone(pk)
         self.assertIsNotNone(sk)
         self.assertEqual(pk.param, self.param)
         self.assertEqual(sk.param, self.param)
 
     def test_sign_and_verify(self):
-        pk, sk = picnic.keygen(self.param)
+        sk, pk = picnic.keygen(self.param)
         sig = picnic.sign(sk, msg)
         self.assertIsNotNone(sig)
         self.assertTrue(picnic.verify(pk, msg, sig))
 
     def test_verify_wrong_msg(self):
-        pk, sk = picnic.keygen(self.param)
+        sk, pk = picnic.keygen(self.param)
         sig = picnic.sign(sk, msg)
         self.assertIsNotNone(sig)
         self.assertFalse(picnic.verify(pk, msg2, sig))
 
     def test_key_serialization(self):
-        pk, sk = picnic.keygen(self.param)
+        sk, pk = picnic.keygen(self.param)
         pk2 = picnic.PublicKey(bytes(pk))
         sk2 = picnic.PrivateKey(bytes(sk))
         self.assertEqual(pk, pk2)

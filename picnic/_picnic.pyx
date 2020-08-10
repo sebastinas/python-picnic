@@ -161,7 +161,7 @@ def keygen(cpicnic.picnic_params_t param):
     pk = PublicKey()
     if cpicnic.picnic_keygen(param, &pk.key, &sk.key):
         raise ValueError("Key generation failed")
-    return pk, sk
+    return sk, pk
 
 
 def sign(PrivateKey sk not None, message):

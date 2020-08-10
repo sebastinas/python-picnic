@@ -23,7 +23,7 @@
 Picnic is a familiy of post-quantum secure digital signatures. This modules provides Python-bindings
 for Picnic.
 
->>> pk, sk = picnic.keygen(self.param)
+>>> sk, pk = picnic.keygen(self.param)
 >>> sig = picnic.sign(sk, b"a message")
 >>> picnic.verify(pk, b"a message", sig)
 True
