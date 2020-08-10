@@ -29,6 +29,7 @@ for Picnic.
 True
 """
 
+import struct
 from ._picnic import (
     PrivateKey,
     PublicKey,
@@ -54,3 +55,19 @@ from ._picnic import (
 )
 
 __version__ = "1.0"
+
+
+def unpack_nist_signature(sig):
+    """ Unpack message and signature from a signature with the encoding of the NIST PQC competition
+    """
+
+    (siglen,) = struct.unpack_from("<I", sig)
+    msglen = len(sig) - siglen - 4
+    return sig[4 : 4 + msglen], sig[4 + msglen :]
+
+
+def pack_nist_signature(msg, sig):
+    """ Pack message and signature with the encoding of the NIST PQC competition
+    """
+
+    return struct.pack("<I{}B{}B".format(len(msg), len(sig)), len(sig), *msg, *sig)

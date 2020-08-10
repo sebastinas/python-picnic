@@ -209,8 +209,13 @@ class TestVector(unittest.TestCase, metaclass=VectorMeta):
         sk = picnic.PrivateKey(tv.sk)
         pk = picnic.PublicKey(tv.pk)
         sig = picnic.sign(sk, tv.msg)
-        self.assertEqual(sig, tv.sm[tv.mlen + 4 :])
-        self.assertTrue(picnic.verify(pk, tv.msg, tv.sm[tv.mlen + 4 :]))
+
+        msg2, sig2 = picnic.unpack_nist_signature(tv.sm)
+        self.assertEqual(sig, sig2)
+        self.assertTrue(picnic.verify(pk, tv.msg, sig2))
+
+        sig2 = picnic.pack_nist_signature(tv.msg, sig)
+        self.assertEqual(sig2, tv.sm)
 
 
 if __name__ == "__main__":
