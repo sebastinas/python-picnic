@@ -164,6 +164,17 @@ def keygen(cpicnic.picnic_params_t param):
     return sk, pk
 
 
+def validate_keypair(PrivateKey sk not None, PublicKey pk not None):
+    """ Validate a key pair
+
+    >>> sk, pk = keygen(param)
+    >>> validate_keypair(sk, pk)
+    True
+    """
+
+    return not cpicnic.picnic_validate_keypair(&sk.key, &pk.key)
+
+
 def sign(PrivateKey sk not None, message):
     """ Sign a message
 

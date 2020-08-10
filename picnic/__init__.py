@@ -35,6 +35,7 @@ from ._picnic import (
     keygen,
     sign,
     verify,
+    validate_keypair,
     Picnic_L1_FS,
     Picnic_L1_UR,
     Picnic_L3_FS,

@@ -34,6 +34,7 @@ class PicnicBase:
         self.assertIsNotNone(sk)
         self.assertEqual(pk.param, self.param)
         self.assertEqual(sk.param, self.param)
+        self.assertTrue(picnic.validate_keypair(sk, pk))
 
     def test_sign_and_verify(self):
         sk, pk = picnic.keygen(self.param)
@@ -53,6 +54,8 @@ class PicnicBase:
         sk2 = picnic.PrivateKey(bytes(sk))
         self.assertEqual(pk, pk2)
         self.assertEqual(sk, sk2)
+        self.assertTrue(picnic.validate_keypair(sk, pk2))
+        self.assertTrue(picnic.validate_keypair(sk2, pk))
 
         sig = picnic.sign(sk, msg)
         self.assertTrue(picnic.verify(pk2, msg, sig))
