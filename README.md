@@ -1,7 +1,7 @@
 # Python bindings for Picnic
 
 python-picnic provides Python bindings based on [Cython](https://cython.org/) for the
-[Picnic](https://microsoft.github.io/Picnic/) post-quantum signature scheme implementation.
+[Picnic](https://microsoft.github.io/Picnic/) post-quantum signature scheme.
 
 ## Dependencies
 
