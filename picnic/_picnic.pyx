@@ -31,6 +31,8 @@ cdef class PrivateKey:
     >>> sk, pk = keygen(param)
     >>> sk.param == param
     True
+    >>> sk.pk == pk
+    True
     >>> sk2 = PrivatKey(bytes(sk))
     >>> sk == sk2
     True
@@ -50,6 +52,14 @@ cdef class PrivateKey:
     def param(self):
         """ The corresponding parameter set """
         return <cpicnic.picnic_params_t> self.key.data[0]
+
+    @property
+    def pk(self):
+        """ The corresponding public key """
+        pk = PublicKey()
+        if cpicnic.picnic_sk_to_pk(&self.key, &pk.key):
+            raise ValueError("Unable to construct public key")
+        return pk
 
     def __bytes__(self):
         buf = bytearray(cpicnic.PICNIC_MAX_PRIVATEKEY_SIZE)

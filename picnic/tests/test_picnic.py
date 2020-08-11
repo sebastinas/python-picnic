@@ -35,6 +35,7 @@ class PicnicBase:
         self.assertEqual(pk.param, self.param)
         self.assertEqual(sk.param, self.param)
         self.assertTrue(picnic.validate_keypair(sk, pk))
+        self.assertEqual(sk.pk, pk)
 
     def test_sign_and_verify(self):
         sk, pk = picnic.keygen(self.param)
