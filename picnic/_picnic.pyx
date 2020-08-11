@@ -43,6 +43,9 @@ cdef class PrivateKey:
             if cpicnic.picnic_read_private_key(&self.key, buf, len(buf)):
                 raise ValueError("Unable to read private key")
 
+    def __dealloc__(self):
+        cpicnic.picnic_clear_private_key(&self.key)
+
     @property
     def param(self):
         """ The corresponding parameter set """
