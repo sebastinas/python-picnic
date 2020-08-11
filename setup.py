@@ -7,17 +7,14 @@ from Cython.Build import cythonize
 from setuptools import setup, Extension
 
 
-if pkgconfig.exists("picnic >= 3"):
+if pkgconfig.installed("picnic", ">=3.0.1"):
     flags = pkgconfig.parse("picnic")
     define_macros = flags["define_macros"]
     include_dirs = flags["include_dirs"]
     library_dirs = flags["library_dirs"]
     libraries = list(flags["libraries"])
 else:
-    define_macros = ""
-    include_dirs = ""
-    library_dirs = ""
-    libraries = ["picnic"]
+    raise EnvironmentError("Required picnic version not available")
 
 
 def read(name):

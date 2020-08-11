@@ -59,3 +59,5 @@ cdef extern from "<picnic.h>" nogil:
   int picnic_read_private_key(picnic_privatekey_t* key, const uint8_t* buf, size_t buflen)
 
   int picnic_validate_keypair(const picnic_privatekey_t* privatekey, const picnic_publickey_t* publickey)
+  void picnic_clear_private_key(picnic_privatekey_t* key)
+  int picnic_sk_to_pk(const picnic_privatekey_t* privatekey, picnic_publickey_t* publickey)
