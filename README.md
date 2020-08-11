@@ -12,3 +12,7 @@ pypicnic provides Python bindings based on [Cython](https://cython.org/) for the
 ## License
 
 The code is licensed under the MIT license.
+
+## Build status
+
+[![Build Status](https://travis-ci.org/sebastinas/python-picnic.svg?branch=master)](https://travis-ci.org/sebastinas/python-picnic)
