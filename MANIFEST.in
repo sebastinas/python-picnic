@@ -1,0 +1,3 @@
+include picnic/cpicnic.pxd picnic/_picnic.pyx
+include LICENSE CHANGELOG.md
+recursive-include picnic picnic/tests *.py *.txt
