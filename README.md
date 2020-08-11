@@ -26,7 +26,7 @@ python3 setup.py install
 import picnic
 
 # create keypair
-sk, pk = picnic.keygen(self.param)
+sk, pk = picnic.keygen(picinc.Picnic_L1_full)
 # sign a message
 sig = picnic.sign(sk, b"a message")
 # verify a signature
