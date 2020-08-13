@@ -173,7 +173,6 @@ class VectorMeta(type):
 
         for param, filename in tests:
             for tv in cls.read_test_vector(filename):
-
                 def func(self):
                     return self.run_tv(tv)
 
@@ -181,6 +180,15 @@ class VectorMeta(type):
                     picnic.PARAMETER_NAMES[param], tv.count
                 )
                 attrs[func.__name__] = func
+
+                def func(self):
+                    return self.run_tv_nist(tv)
+
+                func.__name__ = "test_nist_{}_{}".format(
+                    picnic.PARAMETER_NAMES[param], tv.count
+                )
+                attrs[func.__name__] = func
+
 
         return super().__new__(cls, name, bases, attrs)
 
@@ -217,6 +225,13 @@ class TestVector(unittest.TestCase, metaclass=VectorMeta):
 
         sig2 = picnic.pack_nist_signature(tv.msg, sig)
         self.assertEqual(sig2, tv.sm)
+
+    def run_tv_nist(self, tv):
+        sk = picnic.PrivateKey(tv.sk)
+        pk = picnic.PublicKey(tv.pk)
+        sig = picnic.sign_nist(sk, tv.msg)
+        self.assertEqual(sig, tv.sm)
+        self.assertEqual(picnic.verify_nist(pk, sig), tv.msg)
 
 
 if __name__ == "__main__":

@@ -54,7 +54,9 @@ from ._picnic import (
     PARAMETER_NAMES,
 )
 
+__license__ = "MIT/Expat"
 __version__ = "1.0"
+__docformat__ = 'reStructuredText'
 
 
 def unpack_nist_signature(sig):
@@ -71,3 +73,33 @@ def pack_nist_signature(msg, sig):
     """
 
     return struct.pack("<I{}B{}B".format(len(msg), len(sig)), len(sig), *msg, *sig)
+
+
+def sign_nist(sk, msg):
+    """Sign a message and encode signature for NIST PQC competition
+
+    :param sk: the private key
+    :param msg: the message to sign
+    :type sk: PrivateKey
+    :type msg: bytes-like
+    :returns: a signature
+    :rtype: bytes
+    """
+
+    sig = sign(sk, msg)
+    return pack_nist_signature(msg, sig)
+
+
+def verify_nist(pk, sig):
+    """Verify a signature encoded for the NIST PQC competition and return signed message
+
+    :param pk: the public key
+    :param sig: NIST PQC encoded signature to verify
+    :type pk: PublicKey
+    :type sig: bytes-like
+    :returns: the signed message or None on failure
+    :rtype: bytes
+    """
+
+    msg, sig = unpack_nist_signature(sig)
+    return msg if verify(pk, msg, sig) else None
