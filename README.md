@@ -20,6 +20,14 @@ or by running:
 python3 setup.py install
 ```
 
+Packages for Ubuntu are also available via the [picnic
+PPA](https://launchpad.net/~s-ramacher/+archive/ubuntu/picnic):
+```sh
+sudo add-apt-repository ppa:s-ramacher/picnic
+sudo apt update
+sudo apt install python3-picnic
+```
+
 ## Usage
 
 ```python3
