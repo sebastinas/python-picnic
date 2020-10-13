@@ -17,7 +17,6 @@ python:
 
 matrix:
   allow_failures:
-     - python: 3.9-dev
      - python: nightly
 
 install:
