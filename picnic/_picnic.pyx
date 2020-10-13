@@ -21,9 +21,11 @@
 from . cimport cpicnic
 from libc.stdint cimport uint8_t
 
+__docformat__ = 'reStructuredText'
+
 
 cdef class PrivateKey:
-    """ Picnic private key
+    """Picnic private key
 
     This class represents a private key as returned by the key generation algorithm. It supports
     serialization to and from bytes.
@@ -40,7 +42,15 @@ cdef class PrivateKey:
 
     cdef cpicnic.picnic_privatekey_t key
 
-    def __init__(self, bytes buf=None):
+    def __init__(self, buf=None):
+        """Instantiate private key
+
+        If a serialized private key is provided, it will be deserialized from the buffer.
+
+        :param buf: serialized private key, optional
+        :type buf: bytes-like
+        """
+
         if buf is not None:
             if cpicnic.picnic_read_private_key(&self.key, buf, len(buf)):
                 raise ValueError("Unable to read private key")
@@ -50,12 +60,12 @@ cdef class PrivateKey:
 
     @property
     def param(self):
-        """ The corresponding parameter set """
+        """The corresponding parameter set"""
         return <cpicnic.picnic_params_t> self.key.data[0]
 
     @property
     def pk(self):
-        """ The corresponding public key """
+        """The corresponding public key"""
         pk = PublicKey()
         if cpicnic.picnic_sk_to_pk(&self.key, &pk.key):
             raise ValueError("Unable to construct public key")
@@ -80,7 +90,7 @@ cdef class PrivateKey:
 
 
 cdef class PublicKey:
-    """ Picnic public key
+    """Picnic public key
 
     This class represents a public key as returned by the key generation algorithm. It supports
     serialization to and from bytes.
@@ -96,13 +106,21 @@ cdef class PublicKey:
     cdef cpicnic.picnic_publickey_t key
 
     def __init__(self, bytes buf=None):
+        """Instantiate public key
+
+        If a serialized public key is provided, it will be deserialized from the buffer.
+
+        :param buf: serialized public key, optional
+        :type buf: bytes-like
+        """
+
         if buf is not None:
             if cpicnic.picnic_read_public_key(&self.key, buf, len(buf)):
                 raise ValueError("Unable to read public key")
 
     @property
     def param(self):
-        """ The corresponding parameter set """
+        """The corresponding parameter set"""
         return <cpicnic.picnic_params_t> self.key.data[0]
 
     def __bytes__(self):
@@ -163,11 +181,16 @@ cdef inline get_parameter_name(cpicnic.picnic_params_t param):
 
 
 def keygen(cpicnic.picnic_params_t param):
-    """ Generate a new key pair
+    """Generate a new key pair
 
     All parameters from SUPPORTED_PARAMETERS are supported.
 
     >>> sk, pk = keygen(param)
+
+    :param param: the desired Picnic parameter
+    :type param: picnic_params_t
+    :returns: a private key and public key
+    :rtype: (PrivateKey, PublicKey)
     """
 
     sk = PrivateKey()
@@ -178,18 +201,25 @@ def keygen(cpicnic.picnic_params_t param):
 
 
 def validate_keypair(PrivateKey sk not None, PublicKey pk not None):
-    """ Validate a key pair
+    """Validate a key pair
 
     >>> sk, pk = keygen(param)
     >>> validate_keypair(sk, pk)
     True
+
+    :param sk: a private key
+    :param pk: a public key
+    :type sk: PrivateKey
+    :type pk: PublicKey
+    :returns: True if the public key matches the private key, false otherwise
+    :rtype: bool
     """
 
     return not cpicnic.picnic_validate_keypair(&sk.key, &pk.key)
 
 
 def sign(PrivateKey sk not None, message):
-    """ Sign a message
+    """Sign a message
 
     Create a signature for the given message. The message is expected to have a bytes-like
     interface.
@@ -198,6 +228,13 @@ def sign(PrivateKey sk not None, message):
     >>> sig = sign(sk, b"a message")
     >>> sig is not None
     True
+
+    :param sk: the private key
+    :param message: the message to sign
+    :type sk: PrivateKey
+    :type message: bytes-like
+    :returns: a signature
+    :rtype: bytes
     """
 
     cdef size_t size = cpicnic.picnic_signature_size(sk.param)
@@ -217,7 +254,7 @@ def sign(PrivateKey sk not None, message):
 
 
 def verify(PublicKey pk not None, message, signature):
-    """ Verify signature of a message
+    """Verify signature of a message
 
     Verifies a signature. The message is expected to have a bytes-like interface.
 
@@ -225,6 +262,15 @@ def verify(PublicKey pk not None, message, signature):
     >>> sig = sign(sk, b"a message")
     >>> verify(pk, b"a message", sig)
     True
+
+    :param pk: the public key
+    :param message: the message
+    :param signature: the signature
+    :type pk: PublicKey
+    :type message: bytes-like
+    :type signature: bytes-like
+    :returns: True if the signature verifies, False otherwise
+    :rtype: bool
     """
 
     cdef const uint8_t[::1] msgview = message

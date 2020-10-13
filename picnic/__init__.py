@@ -60,7 +60,7 @@ __docformat__ = 'reStructuredText'
 
 
 def unpack_nist_signature(sig):
-    """ Unpack message and signature from a signature with the encoding of the NIST PQC competition
+    """Unpack message and signature from a signature with the encoding of the NIST PQC competition
     """
 
     (siglen,) = struct.unpack_from("<I", sig)
@@ -69,7 +69,7 @@ def unpack_nist_signature(sig):
 
 
 def pack_nist_signature(msg, sig):
-    """ Pack message and signature with the encoding of the NIST PQC competition
+    """Pack message and signature with the encoding of the NIST PQC competition
     """
 
     return struct.pack("<I{}B{}B".format(len(msg), len(sig)), len(sig), *msg, *sig)
