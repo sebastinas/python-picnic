@@ -44,7 +44,3 @@ picnic.verify(pk, b"a message", sig)
 ## License
 
 The code is licensed under the MIT license.
-
-## Build status
-
-[![Build Status](https://travis-ci.org/sebastinas/python-picnic.svg?branch=master)](https://travis-ci.org/sebastinas/python-picnic)
