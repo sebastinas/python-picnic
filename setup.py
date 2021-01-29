@@ -3,8 +3,19 @@
 import os.path
 import pkgconfig
 import sys
-from Cython.Build import cythonize
 from setuptools import setup, Extension
+
+try:
+    from Cython.Build import cythonize
+
+    have_cython = True
+except:
+    have_cython = False
+
+
+def read(name):
+    with open(os.path.join(os.path.dirname(__file__), name)) as f:
+        return f.read()
 
 
 if pkgconfig.installed("picnic", ">=3.0.1"):
@@ -16,10 +27,31 @@ if pkgconfig.installed("picnic", ">=3.0.1"):
 else:
     raise EnvironmentError("Required picnic version not available")
 
-
-def read(name):
-    with open(os.path.join(os.path.dirname(__file__), name)) as f:
-        return f.read()
+if have_cython:
+    ext_modules = cythonize(
+        [
+            Extension(
+                "picnic._picnic",
+                ["picnic/_picnic.pyx"],
+                define_macros=define_macros,
+                include_dirs=include_dirs,
+                library_dirs=library_dirs,
+                libraries=libraries,
+            )
+        ],
+        language_level=3,
+    )
+else:
+    ext_modules = [
+        Extension(
+            "picnic._picnic",
+            ["picnic/_picnic.c"],
+            define_macros=define_macros,
+            include_dirs=include_dirs,
+            library_dirs=library_dirs,
+            libraries=libraries,
+        )
+    ]
 
 
 setup(
@@ -32,19 +64,7 @@ setup(
     author_email="sebastian.ramacher@ait.ac.at",
     url="https://github.com/sebastinas/python-picnic",
     license="Expat",
-    ext_modules=cythonize(
-        [
-            Extension(
-                "picnic._picnic",
-                ["picnic/_picnic.pyx"],
-                define_macros=define_macros,
-                include_dirs=include_dirs,
-                library_dirs=library_dirs,
-                libraries=libraries,
-            )
-        ],
-        language_level=3,
-    ),
+    ext_modules=ext_modules,
     packages=["picnic"],
     classifiers=[
         "Development Status :: 4 - Beta",
