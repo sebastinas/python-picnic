@@ -21,7 +21,7 @@
 from . cimport cpicnic
 from libc.stdint cimport uint8_t
 
-__docformat__ = 'reStructuredText'
+__docformat__ = "reStructuredText"
 
 
 cdef class PrivateKey:

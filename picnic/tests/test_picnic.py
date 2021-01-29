@@ -173,6 +173,7 @@ class VectorMeta(type):
 
         for param, filename in tests:
             for tv in cls.read_test_vector(filename):
+
                 def func(self):
                     return self.run_tv(tv)
 
@@ -188,7 +189,6 @@ class VectorMeta(type):
                     picnic.PARAMETER_NAMES[param], tv.count
                 )
                 attrs[func.__name__] = func
-
 
         return super().__new__(cls, name, bases, attrs)
 
