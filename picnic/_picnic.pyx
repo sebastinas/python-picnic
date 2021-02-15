@@ -22,6 +22,7 @@
 
 from . cimport cpicnic
 from libc.stdint cimport uint8_t
+from libc.string cimport memcmp
 
 __docformat__ = "reStructuredText"
 
@@ -85,10 +86,24 @@ cdef class PrivateKey:
         return "PrivateKey({})".format(bytes(self))
 
     def __eq__(self, other):
-        return bytes(self) == bytes(other)
+        if not isinstance(other, PrivateKey):
+            raise NotImplementedError
+        cdef PrivateKey other_sk = <PrivateKey> other
+        return memcmp(
+            &self.key.data[0],
+            &other_sk.key.data[0],
+            cpicnic.picnic_private_key_size(self.param)
+        ) == 0
 
     def __neq__(self, other):
-        return bytes(self) != bytes(other)
+        if not isinstance(other, PrivateKey):
+            raise NotImplementedError
+        cdef PrivateKey other_sk = <PrivateKey> other
+        return memcmp(
+            &self.key.data[0],
+            &other_sk.key.data[0],
+            cpicnic.picnic_private_key_size(self.param)
+        ) != 0
 
     def __hash__(self):
         return hash(bytes(self))
@@ -140,10 +155,24 @@ cdef class PublicKey:
         return "PublicKey({})".format(bytes(self))
 
     def __eq__(self, other):
-        return bytes(self) == bytes(other)
+        if not isinstance(other, PublicKey):
+            raise NotImplementedError
+        cdef PublicKey other_pk = <PublicKey> other
+        return memcmp(
+            &self.key.data[0],
+            &other_pk.key.data[0],
+            cpicnic.picnic_public_key_size[self.param]
+        ) == 0
 
     def __neq__(self, other):
-        return bytes(self) != bytes(other)
+        if not isinstance(other, PublicKey):
+            raise NotImplementedError
+        cdef PublicKey other_pk = <PublicKey> other
+        return memcmp(
+            &self.key.data[0],
+            &other_pk.key.data[0],
+            cpicnic.picnic_public_key_size[self.param]
+        ) != 0
 
     def __hash__(self):
         return hash(bytes(self))
@@ -180,6 +209,8 @@ ALL_PARAMETERS = (
 SUPPORTED_PARAMETERS = tuple(param for param in ALL_PARAMETERS
                              if cpicnic.picnic_signature_size(param))
 PARAMETER_NAMES = {param: get_parameter_name(param) for param in ALL_PARAMETERS}
+PRIVATE_KEY_SIZES = {param: cpicnic.picnic_private_key_size(param) for param in ALL_PARAMETERS}
+PUBLIC_KEY_SIZES = {param: cpicnic.picnic_public_key_size(param) for param in ALL_PARAMETERS}
 
 
 cdef inline get_parameter_name(cpicnic.picnic_params_t param):

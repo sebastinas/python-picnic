@@ -60,6 +60,8 @@ Picnic_L5_full: int
 ALL_PARAMETERS: Tuple[int]
 SUPPORTED_PARAMETERS: Tuple[int]
 PARAMETER_NAMES: Mapping[int, str]
+PRIVATE_KEY_SIZE: Mapping[int, int]
+PUBLIC_KEY_SIZE: Mapping[int, int]
 
 def keygen(param: int) -> Tuple[PrivateKey, PublicKey]: ...
 def validate_keypair(sk: PrivateKey, pk: PublicKey) -> bool: ...
