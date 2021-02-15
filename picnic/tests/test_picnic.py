@@ -63,6 +63,12 @@ class PicnicBase:
         sig = picnic.sign(sk2, msg)
         self.assertTrue(picnic.verify(pk, msg, sig))
 
+    def test_key_comp(self):
+        sk, pk = picnic.keygen(self.param)
+        sk2, pk2 = picnic.keygen(self.param)
+        self.assertNotEqual(pk, pk2)
+        self.assertNotEqual(sk, sk2)
+
 
 @unittest.skipIf(
     picnic.Picnic_L1_FS not in picnic.SUPPORTED_PARAMETERS, "not supported"
