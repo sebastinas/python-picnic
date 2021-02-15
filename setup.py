@@ -5,13 +5,6 @@ import pkgconfig
 import sys
 from setuptools import setup, Extension
 
-try:
-    from Cython.Build import cythonize
-
-    have_cython = True
-except:
-    have_cython = False
-
 
 def read(name):
     with open(os.path.join(os.path.dirname(__file__), name)) as f:
@@ -23,35 +16,20 @@ if pkgconfig.installed("picnic", ">=3.0.1"):
     define_macros = flags["define_macros"]
     include_dirs = flags["include_dirs"]
     library_dirs = flags["library_dirs"]
-    libraries = list(flags["libraries"])
+    libraries = flags["libraries"]
 else:
     raise EnvironmentError("Required picnic version not available")
 
-if have_cython:
-    ext_modules = cythonize(
-        [
-            Extension(
-                "picnic._picnic",
-                ["picnic/_picnic.pyx"],
-                define_macros=define_macros,
-                include_dirs=include_dirs,
-                library_dirs=library_dirs,
-                libraries=libraries,
-            )
-        ],
-        language_level=3,
+ext_modules = [
+    Extension(
+        "picnic._picnic",
+        ["picnic/_picnic.pyx"],
+        define_macros=define_macros,
+        include_dirs=include_dirs,
+        library_dirs=library_dirs,
+        libraries=libraries,
     )
-else:
-    ext_modules = [
-        Extension(
-            "picnic._picnic",
-            ["picnic/_picnic.c"],
-            define_macros=define_macros,
-            include_dirs=include_dirs,
-            library_dirs=library_dirs,
-            libraries=libraries,
-        )
-    ]
+]
 
 
 setup(
