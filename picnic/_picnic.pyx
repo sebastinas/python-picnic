@@ -161,7 +161,7 @@ cdef class PublicKey:
         return memcmp(
             &self.key.data[0],
             &other_pk.key.data[0],
-            cpicnic.picnic_public_key_size[self.param]
+            cpicnic.picnic_public_key_size(self.param)
         ) == 0
 
     def __neq__(self, other):
@@ -171,7 +171,7 @@ cdef class PublicKey:
         return memcmp(
             &self.key.data[0],
             &other_pk.key.data[0],
-            cpicnic.picnic_public_key_size[self.param]
+            cpicnic.picnic_public_key_size(self.param)
         ) != 0
 
     def __hash__(self):
