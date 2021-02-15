@@ -285,4 +285,3 @@ def verify(PublicKey pk not None, message, signature):
     cdef const uint8_t[::1] sigview = signature
 
     return not cpicnic.picnic_verify(&pk.key, &msgview[0], msgview.size, &sigview[0], sigview.size)
-

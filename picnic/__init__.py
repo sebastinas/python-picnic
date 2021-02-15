@@ -30,6 +30,8 @@ True
 """
 
 import struct
+from typing import Optional, Tuple
+
 from ._picnic import (
     PrivateKey,
     PublicKey,
@@ -59,23 +61,21 @@ __version__ = "1.0"
 __docformat__ = "reStructuredText"
 
 
-def unpack_nist_signature(sig):
-    """Unpack message and signature from a signature with the encoding of the NIST PQC competition
-    """
+def unpack_nist_signature(sig: bytes) -> Tuple[bytes, bytes]:
+    """Unpack message and signature from a signature with the encoding of the NIST PQC competition"""
 
     (siglen,) = struct.unpack_from("<I", sig)
     msglen = len(sig) - siglen - 4
     return sig[4 : 4 + msglen], sig[4 + msglen :]
 
 
-def pack_nist_signature(msg, sig):
-    """Pack message and signature with the encoding of the NIST PQC competition
-    """
+def pack_nist_signature(msg: bytes, sig: bytes) -> bytes:
+    """Pack message and signature with the encoding of the NIST PQC competition"""
 
     return struct.pack("<I{}B{}B".format(len(msg), len(sig)), len(sig), *msg, *sig)
 
 
-def sign_nist(sk, msg):
+def sign_nist(sk: PrivateKey, msg: bytes) -> bytes:
     """Sign a message and encode signature for NIST PQC competition
 
     :param sk: the private key
@@ -90,7 +90,7 @@ def sign_nist(sk, msg):
     return pack_nist_signature(msg, sig)
 
 
-def verify_nist(pk, sig):
+def verify_nist(pk: PublicKey, sig: bytes) -> Optional[bytes]:
     """Verify a signature encoded for the NIST PQC competition and return signed message
 
     :param pk: the public key

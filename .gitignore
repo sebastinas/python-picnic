@@ -4,3 +4,4 @@ __pycache__/
 *.egg-info/
 picnic/*.c
 *.so
+.mypy_cache/

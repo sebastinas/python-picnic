@@ -27,5 +27,8 @@ ext_modules = [
 setup(
     ext_modules=ext_modules,
     packages=["picnic"],
+    package_data={
+        "picnic": ["_picnic.pyi", "py.typed"]
+    },
     test_suite="picnic.tests",
 )
