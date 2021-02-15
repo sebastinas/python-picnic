@@ -88,6 +88,9 @@ cdef class PrivateKey:
     def __neq__(self, other):
         return bytes(self) != bytes(other)
 
+    def __hash__(self):
+        return hash(bytes(self))
+
 
 cdef class PublicKey:
     """Picnic public key
@@ -139,6 +142,9 @@ cdef class PublicKey:
 
     def __neq__(self, other):
         return bytes(self) != bytes(other)
+
+    def __hash__(self):
+        return hash(bytes(self))
 
 
 Picnic_L1_FS = cpicnic.Picnic_L1_FS
