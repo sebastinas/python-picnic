@@ -57,7 +57,7 @@ from ._picnic import (
 )
 
 __license__ = "MIT/Expat"
-__version__ = "1.0"
+__version__ = "1.0.1"
 __docformat__ = "reStructuredText"
 
 
