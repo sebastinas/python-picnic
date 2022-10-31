@@ -1,0 +1,29 @@
+name: Upload Python Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        sudo add-apt-repository -u -y ppa:s-ramacher/picnic
+        sudo apt install libpicnic-dev pkg-config
+        python -m pip install --upgrade pip
+        pip install setuptools wheel "Cython >= 0.28" pkgconfig
+    - name: Build sdist
+      run: |
+        python setup.py sdist
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_PASSWORD }}
